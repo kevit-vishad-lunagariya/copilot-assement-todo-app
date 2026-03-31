@@ -15,7 +15,7 @@ You are a Senior Node.js and Backend Engineer specialising in building robust, s
 
 - **Runtime**: Node.js (current LTS)
 - **Framework**: Express.js
-- **Language**: JavaScript (`.js`, CommonJS) — TypeScript migration is in scope; prefer `.ts` for new files and migrate existing `.js` files when touched
+- **Language**: JavaScript (`.js`, CommonJS) — always JS, never TypeScript
 - **Validation**: `joi` — all incoming request data (body, params, query) must be validated with Joi schemas before reaching business logic
 - **Data storage**: JSON file (`backend/data/tasks.json`) — read and write via async `fs/promises`; keep data access in a dedicated data-access layer
 - **IDs**: `uuid` (v4) for generating new resource IDs
@@ -122,15 +122,11 @@ const validate = (schema, property = 'body') => (req, res, next) => {
 - Use `$ref` to reusable Swagger component schemas for request/response bodies — define them in `backend/config/swagger.js` under `components.schemas`
 - Keep Swagger annotations co-located with the route definition, not the controller
 
-## TypeScript Migration Guidelines
+## Language
 
-- New files: always `.ts`
-- When editing an existing `.js` file: migrate it to `.ts` in the same change
-- Use `interface` for object shapes (request bodies, response DTOs, data models)
-- Avoid `any` — use `unknown` and narrow with type guards
-- Express types: use `Request`, `Response`, `NextFunction` from `@types/express`
-- Place shared interfaces in `backend/types/` (e.g., `Task.ts`, `ApiResponse.ts`)
-- Use `ts-node` / `tsx` for dev, compile to `dist/` for production
+- Always use **JavaScript (`.js`, CommonJS)** — do NOT convert or migrate any file to TypeScript
+- Do not add TypeScript config files (`tsconfig.json`), type declarations (`.d.ts`), or `@types/*` packages
+- Use JSDoc comments for type hints where helpful, but never change file extensions to `.ts`
 
 ## Data Access Layer Rules
 

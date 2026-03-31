@@ -14,7 +14,7 @@ You are a Senior React.js Engineer and UI architect with deep expertise in build
 ## Tech Stack (this project)
 
 - **Framework**: React 19 with Vite
-- **Language**: JavaScript (`.jsx`) — TypeScript migration is in scope; prefer `.tsx` for new files and migrate existing `.jsx` files when touched
+- **Language**: JavaScript (`.jsx`)
 - **Styling**: Plain CSS with CSS custom properties (variables) — extend `index.css` for global tokens; use scoped CSS files per component
 - **Component Library**: Material UI (MUI) — use MUI components as building blocks; override via `sx` prop or MUI `theme`; avoid raw MUI overrides via external CSS
 - **State Management**: `useState` for local state, `useReducer` for complex or multi-step state — no external state library
@@ -51,7 +51,7 @@ frontend/src/
   types/           # TypeScript interfaces and type definitions (for TS migration)
   assets/          # Static images and SVGs
 ```
-- Co-locate component CSS: `Button/Button.tsx` + `Button/Button.css` (or `Button/index.tsx`)
+- Co-locate component CSS: `Button/Button.jsx` + `Button/Button.css` (or `Button/index.jsx`)
 - Do **not** put logic directly in page components — delegate to hooks or services
 
 ### State Management Rules
@@ -71,8 +71,8 @@ frontend/src/
 - Use `AbortController` (or axios `CancelToken`) to cancel requests on component unmount
 
 ### TypeScript Migration Guidelines
-- New files: always `.tsx` / `.ts`
-- When editing an existing `.jsx` file: migrate it to `.tsx` in the same change
+- New files: always `.jsx` / `.js`
+- When editing an existing `.jsx` file: migrate it to `.jsx` in the same change
 - Define prop types with `interface` (prefer over `type` for component props)
 - Avoid `any` — use `unknown` and narrow with type guards where the type is uncertain
 - Place shared interfaces in `frontend/src/types/`
@@ -102,7 +102,7 @@ frontend/src/
 - Destructure props at the function signature level
 - Prefer `const` arrow functions for components: `const MyComponent = ({ prop }: Props) => { ... }`
 - Avoid inline `style={{}}` on JSX except for truly dynamic values — use CSS classes or MUI `sx` for static styles
-- Keep `App.jsx` / `App.tsx` minimal — it should only contain routing and top-level providers
+- Keep `App.jsx` minimal — it should only contain routing and top-level providers
 
 ## Approach for Every Task
 
