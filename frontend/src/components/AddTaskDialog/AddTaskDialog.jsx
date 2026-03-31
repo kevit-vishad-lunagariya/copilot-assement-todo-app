@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  Box,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -16,7 +17,6 @@ import { createTask } from '../../services/tasksService';
 const STATUS_OPTIONS = [
   { value: 'todo', label: 'To Do' },
   { value: 'in-progress', label: 'In Progress' },
-  { value: 'done', label: 'Done' },
 ];
 
 const PRIORITY_OPTIONS = [
@@ -51,7 +51,8 @@ export const AddTaskDialog = ({ open, onClose, onCreated }) => {
     if (field === 'title') setTitleError('');
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    if (e) e.preventDefault();
     if (!form.title.trim()) {
       setTitleError('Title is required');
       return;
@@ -98,6 +99,7 @@ export const AddTaskDialog = ({ open, onClose, onCreated }) => {
       maxWidth="sm"
       aria-labelledby="add-task-dialog-title"
     >
+      <Box component="form" onSubmit={handleSubmit}>
       <DialogTitle id="add-task-dialog-title">Add New Task</DialogTitle>
 
       <DialogContent dividers>
@@ -128,6 +130,7 @@ export const AddTaskDialog = ({ open, onClose, onCreated }) => {
             value={form.description}
             onChange={handleChange('description')}
             inputProps={{ maxLength: 1000 }}
+            helperText={`${form.description.length} / 1000`}
           />
 
           <Stack direction="row" spacing={2}>
@@ -167,7 +170,7 @@ export const AddTaskDialog = ({ open, onClose, onCreated }) => {
           Cancel
         </Button>
         <Button
-          onClick={handleSubmit}
+          type="submit"
           variant="contained"
           disabled={isLoading}
           startIcon={isLoading ? <CircularProgress size={16} color="inherit" /> : null}
@@ -175,6 +178,7 @@ export const AddTaskDialog = ({ open, onClose, onCreated }) => {
           {isLoading ? 'Adding…' : 'Add Task'}
         </Button>
       </DialogActions>
+      </Box>
     </Dialog>
   );
 };

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import {
+  Box,
   Dialog,
   DialogTitle,
   DialogContent,
@@ -18,6 +19,23 @@ const STATUS_OPTIONS = [
   { value: 'in-progress', label: 'In Progress' },
   { value: 'done', label: 'Done' },
 ];
+
+/** Valid forward transitions per current status (backward moves are rejected by the API). */
+const VALID_NEXT_STATUSES = {
+  'todo': ['todo', 'in-progress'],
+  'in-progress': ['in-progress', 'done'],
+  'done': ['done'],
+};
+
+/**
+ * Returns the STATUS_OPTIONS entries that are valid selections for a given current status.
+ * @param {string} currentStatus - The task's current status value.
+ * @returns {{ value: string, label: string }[]}
+ */
+function getSelectableStatuses(currentStatus) {
+  const allowed = VALID_NEXT_STATUSES[currentStatus] ?? STATUS_OPTIONS.map((o) => o.value);
+  return STATUS_OPTIONS.filter((o) => allowed.includes(o.value));
+}
 
 const PRIORITY_OPTIONS = [
   { value: 'low', label: 'Low' },
@@ -58,7 +76,8 @@ export const EditTaskDialog = ({ open, task, onClose, onUpdated }) => {
     if (field === 'title') setTitleError('');
   };
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (e) => {
+    if (e) e.preventDefault();
     if (!form.title.trim()) {
       setTitleError('Title is required');
       return;
@@ -103,6 +122,7 @@ export const EditTaskDialog = ({ open, task, onClose, onUpdated }) => {
       maxWidth="sm"
       aria-labelledby="edit-task-dialog-title"
     >
+      <Box component="form" onSubmit={handleSubmit}>
       <DialogTitle id="edit-task-dialog-title">Edit Task</DialogTitle>
 
       <DialogContent dividers>
@@ -133,6 +153,7 @@ export const EditTaskDialog = ({ open, task, onClose, onUpdated }) => {
             value={form.description}
             onChange={handleChange('description')}
             inputProps={{ maxLength: 1000 }}
+            helperText={`${form.description.length} / 1000`}
           />
 
           <Stack direction="row" spacing={2}>
@@ -157,7 +178,7 @@ export const EditTaskDialog = ({ open, task, onClose, onUpdated }) => {
               value={form.status}
               onChange={handleChange('status')}
             >
-              {STATUS_OPTIONS.map((opt) => (
+              {getSelectableStatuses(task?.status ?? form.status).map((opt) => (
                 <MenuItem key={opt.value} value={opt.value}>
                   {opt.label}
                 </MenuItem>
@@ -172,7 +193,7 @@ export const EditTaskDialog = ({ open, task, onClose, onUpdated }) => {
           Cancel
         </Button>
         <Button
-          onClick={handleSubmit}
+          type="submit"
           variant="contained"
           disabled={isLoading}
           startIcon={isLoading ? <CircularProgress size={16} color="inherit" /> : null}
@@ -180,6 +201,7 @@ export const EditTaskDialog = ({ open, task, onClose, onUpdated }) => {
           {isLoading ? 'Saving…' : 'Save Changes'}
         </Button>
       </DialogActions>
+      </Box>
     </Dialog>
   );
 };

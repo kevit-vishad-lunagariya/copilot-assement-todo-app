@@ -29,6 +29,7 @@ import {
   DialogContentText,
   DialogActions,
   Snackbar,
+  Skeleton,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import AddIcon from '@mui/icons-material/Add';
@@ -283,10 +284,12 @@ const TaskTable = () => {
 
   const handleTaskCreated = (newTask) => {
     setTasks((prev) => [newTask, ...prev]);
+    showToast('Task created successfully!', 'success');
   };
 
   const handleTaskUpdated = (updated) => {
     setTasks((prev) => prev.map((t) => (t.id === updated.id ? updated : t)));
+    showToast('Task updated successfully!', 'success');
   };
 
   /**
@@ -310,6 +313,8 @@ const TaskTable = () => {
       }
       if (response.success) {
         setTasks((prev) => prev.map((t) => (t.id === task.id ? response.data : t)));
+        const label = task.status === 'todo' ? 'started' : 'completed';
+        showToast(`Task ${label}!`, 'success');
       }
     } catch (err) {
       showToast(err?.response?.data?.message || 'Failed to update task.');
@@ -325,6 +330,7 @@ const TaskTable = () => {
     try {
       await deleteTask(id);
       setTasks((prev) => prev.filter((t) => t.id !== id));
+      showToast('Task deleted.', 'success');
     } catch (err) {
       showToast(err?.response?.data?.message || 'Failed to delete task.');
     } finally {
@@ -336,7 +342,7 @@ const TaskTable = () => {
   const deferredSearch = useDeferredValue(search);
   const isSearchStale = search !== deferredSearch;
 
-  const hasActiveFilters = statusFilter !== '' || priorityFilter !== '';
+  const hasActiveFilters = statusFilter !== '' || priorityFilter !== '' || search !== '';
 
   const filteredTasks = useMemo(
     () =>
@@ -390,16 +396,22 @@ const TaskTable = () => {
       </Stack>
 
       {/* Stats summary cards */}
-      {!isLoading && (
-        <Box
-          sx={{
-            display: 'grid',
-            gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' },
-            gap: 2,
-            mb: 3,
-          }}
-        >
-          {[
+      <Box
+        sx={{
+          display: 'grid',
+          gridTemplateColumns: { xs: 'repeat(2, 1fr)', sm: 'repeat(4, 1fr)' },
+          gap: 2,
+          mb: 3,
+        }}
+      >
+        {isLoading
+          ? [0, 1, 2, 3].map((i) => (
+              <Paper key={i} variant="outlined" sx={{ p: { xs: 1.5, sm: 2 }, borderRadius: 2 }}>
+                <Skeleton variant="text" width="40%" height={48} />
+                <Skeleton variant="text" width="60%" />
+              </Paper>
+            ))
+          : [
             { label: 'Total', value: stats.total, color: '#6366f1', bgColor: '#eef2ff', borderColor: '#c7d2fe' },
             { label: 'To Do', value: stats.todo, color: '#64748b', bgColor: '#f8fafc', borderColor: '#e2e8f0' },
             { label: 'In Progress', value: stats.inProgress, color: '#3b82f6', bgColor: '#eff6ff', borderColor: '#bfdbfe' },
@@ -426,8 +438,7 @@ const TaskTable = () => {
               </Typography>
             </Paper>
           ))}
-        </Box>
-      )}
+      </Box>
 
       {/* Search + Filters row */}
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mb: 2 }} alignItems="flex-start">
@@ -480,8 +491,8 @@ const TaskTable = () => {
         {hasActiveFilters && (
           <Tooltip title="Clear filters">
             <IconButton
-              onClick={() => { setStatusFilter(''); setPriorityFilter(''); }}
-              aria-label="Clear status and priority filters"
+              onClick={() => { setStatusFilter(''); setPriorityFilter(''); setSearch(''); }}
+              aria-label="Clear all filters"
               size="small"
               sx={{ mt: 0.5 }}
             >
@@ -588,7 +599,9 @@ const TaskTable = () => {
         <DialogTitle id="delete-confirm-title">Delete Task?</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            This action cannot be undone. The task will be permanently removed.
+            Delete{' '}
+            <strong>"{tasks.find((t) => t.id === confirmDeleteId)?.title ?? 'this task'}"</strong>?
+            {' '}This action cannot be undone.
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ px: 3, py: 2 }}>
