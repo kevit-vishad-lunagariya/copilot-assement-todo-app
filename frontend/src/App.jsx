@@ -1,121 +1,105 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { ThemeProvider, createTheme, CssBaseline, Box, Stack, Typography } from '@mui/material';
+import TaskAltIcon from '@mui/icons-material/TaskAlt';
+import TaskTable from './components/TaskTable/TaskTable';
 
+const theme = createTheme({
+  palette: {
+    primary: { main: '#6366f1' },
+    secondary: { main: '#8b5cf6' },
+    background: { default: '#f1f5f9', paper: '#ffffff' },
+    success: { main: '#10b981' },
+    info: { main: '#3b82f6' },
+    warning: { main: '#f59e0b' },
+    error: { main: '#ef4444' },
+  },
+  shape: { borderRadius: 12 },
+  typography: {
+    fontFamily: '"Inter", "Segoe UI", Roboto, system-ui, sans-serif',
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: { borderRadius: 8, textTransform: 'none', fontWeight: 600 },
+        containedPrimary: {
+          background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+          boxShadow: '0 4px 14px rgba(99, 102, 241, 0.4)',
+          '&:hover': {
+            background: 'linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%)',
+            boxShadow: '0 6px 20px rgba(99, 102, 241, 0.5)',
+          },
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: { root: { borderRadius: 6, fontWeight: 600 } },
+    },
+    MuiPaper: {
+      styleOverrides: { root: { backgroundImage: 'none' } },
+    },
+    MuiTableHead: {
+      styleOverrides: {
+        root: {
+          '& .MuiTableCell-head': {
+            backgroundColor: '#f8fafc',
+            fontWeight: 700,
+            fontSize: '0.75rem',
+            textTransform: 'uppercase',
+            letterSpacing: '0.05em',
+            color: '#64748b',
+          },
+        },
+      },
+    },
+  },
+});
+
+/**
+ * Root application component. Provides the MUI theme and renders the top-level layout.
+ * @returns {JSX.Element}
+ */
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+        {/* Gradient app header */}
+        <Box
+          component="header"
+          sx={{
+            background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a855f7 100%)',
+            color: 'white',
+            py: { xs: 2.5, sm: 3 },
+            px: { xs: 2, sm: 4 },
+            boxShadow: '0 4px 24px rgba(99, 102, 241, 0.35)',
+          }}
         >
-          Count is {count}
-        </button>
-      </section>
+          <Stack direction="row" alignItems="center" spacing={1.5}>
+            <Box
+              sx={{
+                bgcolor: 'rgba(255,255,255,0.2)',
+                borderRadius: 2,
+                p: 0.75,
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
+              <TaskAltIcon sx={{ fontSize: 28, color: 'white' }} />
+            </Box>
+            <Box>
+              <Typography variant="h6" sx={{ color: 'white', fontWeight: 700, lineHeight: 1.2 }}>
+                TaskFlow
+              </Typography>
+              <Typography variant="caption" sx={{ color: 'rgba(255,255,255,0.8)', display: 'block' }}>
+                Manage your tasks with ease
+              </Typography>
+            </Box>
+          </Stack>
+        </Box>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+        <TaskTable />
+      </Box>
+    </ThemeProvider>
+  );
 }
 
-export default App
+export default App;

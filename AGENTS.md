@@ -25,40 +25,74 @@ This is a full-stack **Todo application** with a clearly separated backend and f
 ```
 copilot-assement-todo-app/
 ├── backend/                        # Node.js / Express REST API
+│   ├── __tests__/                  # Jest unit + integration tests
+│   │   ├── controllers/
+│   │   ├── data/
+│   │   ├── middleware/
+│   │   └── validators/
+│   ├── config/
+│   │   ├── logger.js               # Winston logger configuration
+│   │   └── swagger.js              # swagger-jsdoc spec configuration
 │   ├── controllers/
 │   │   └── tasksController.js      # Pure business logic — no req/res beyond what is needed
 │   ├── data/
-│   │   └── tasks.json              # Flat-file JSON persistence layer
+│   │   ├── tasks.json              # Flat-file JSON persistence layer
+│   │   └── taskStore.js            # fs/promises read/write helpers
 │   ├── middleware/
 │   │   └── errorHandler.js         # Central 4-parameter Express error handler
 │   ├── routes/
 │   │   └── tasks.js                # Express Router — thin, delegates to controllers
+│   ├── validators/
+│   │   └── taskValidator.js        # joi validation schemas
 │   ├── server.js                   # App entry point: middleware wiring, router mounting
 │   └── package.json
 ├── frontend/                       # React 19 + Vite SPA
 │   ├── public/
 │   ├── src/
 │   │   ├── assets/                 # Static images / SVGs
-│   │   ├── components/             # Reusable UI components (create as needed)
-│   │   ├── pages/                  # Route-level page components (create as needed)
-│   │   ├── services/               # Axios API wrappers (create as needed)
-│   │   ├── App.jsx / App.tsx       # Root component and router outlet
+│   │   ├── components/
+│   │   │   ├── AddTaskDialog/      # Dialog for creating tasks
+│   │   │   ├── EditTaskDialog/     # Dialog for editing tasks
+│   │   │   └── TaskTable/          # Main task list table with filters
+│   │   ├── services/
+│   │   │   └── tasksService.js     # axios API wrappers (all HTTP calls)
+│   │   ├── App.jsx                 # Root component
 │   │   ├── App.css
 │   │   ├── index.css
-│   │   └── main.jsx / main.tsx     # ReactDOM.createRoot entry
+│   │   └── main.jsx                # ReactDOM.createRoot entry
+│   ├── tests/
+│   │   └── e2e/
+│   │       └── tasks.spec.js       # Playwright end-to-end tests
 │   ├── index.html
 │   ├── package.json
+│   ├── playwright.config.js
 │   └── vite.config.js
 ├── .github/
 │   └── agents/                     # Agent instruction files
 │       ├── backend-agent.agent.md
+│       ├── logging-agent.agent.md
 │       ├── testing-agent.agent.md
 │       └── ui-agent.agent.md
 ├── AGENTS.md                       # ← you are here
 └── README.md
 ```
 
-**Data flow**: React UI → `services/` (axios) → Express routes → controllers → `data/tasks.json`.
+**Data flow**: React UI → `services/tasksService.js` (axios) → Express routes → controllers → `data/taskStore.js` → `data/tasks.json`.
+
+### Task Data Model
+
+Every task object stored in `tasks.json` has these fields:
+
+| Field         | Type      | Values / Notes                                        |
+|---------------|-----------|-------------------------------------------------------|
+| `id`          | `string`  | UUID v4, generated on creation                        |
+| `title`       | `string`  | 1–200 characters, required                            |
+| `description` | `string`  | 0–1000 characters, optional                           |
+| `status`      | `string`  | `todo` \| `in-progress` \| `done`                   |
+| `priority`    | `string`  | `low` \| `medium` \| `high`                         |
+| `completed`   | `boolean` | `true` when status is `done`                          |
+| `createdAt`   | `string`  | ISO 8601 timestamp, set on creation                   |
+| `updatedAt`   | `string`  | ISO 8601 timestamp, updated on every mutation         |
 
 ---
 
@@ -66,17 +100,18 @@ copilot-assement-todo-app/
 
 ### Backend
 
-| Concern          | Library / Tool              | Version   |
-|------------------|-----------------------------|-----------|
-| Runtime          | Node.js                     | ≥ 20 LTS  |
-| Framework        | Express                     | ^4.18.2   |
-| CORS             | cors                        | ^2.8.5    |
-| Environment vars | dotenv                      | ^16.4.5   |
-| ID generation    | uuid (v4)                   | ^9.0.0    |
-| Validation       | joi                         | (to add)  |
-| Logging          | winston                     | (to add)  |
-| API docs         | swagger-jsdoc + swagger-ui-express | (to add) |
-| Dev server       | nodemon                     | ^3.1.0    |
+| Concern          | Library / Tool                     | Version   |
+|------------------|------------------------------------|-----------|
+| Runtime          | Node.js                            | ≥ 20 LTS  |
+| Framework        | Express                            | ^4.18.2   |
+| CORS             | cors                               | ^2.8.5    |
+| Environment vars | dotenv                             | ^16.4.5   |
+| ID generation    | uuid (v4)                          | ^9.0.0    |
+| Validation       | joi                                | ^18.1.2   |
+| Logging          | winston                            | ^3.19.0   |
+| API docs         | swagger-jsdoc + swagger-ui-express | ^6.2.8 / ^5.0.1 |
+| Dev server       | nodemon                            | ^3.1.0    |
+| Testing          | jest + supertest                   | ^30 / ^7  |
 
 ### Frontend
 
@@ -84,11 +119,12 @@ copilot-assement-todo-app/
 |------------------|-----------------------------|-----------|
 | UI Library       | React                       | ^19.2.4   |
 | Bundler          | Vite                        | ^8.0.1    |
-| Component lib    | MUI (Material UI)           | (to add)  |
-| HTTP client      | axios                       | (to add)  |
-| Routing          | React Router                | (to add)  |
+| Component lib    | MUI (Material UI)           | ^7.3.9    |
+| HTTP client      | axios                       | ^1.14.0   |
+| Routing          | React Router                | (not yet added — single-page app) |
 | Linting          | ESLint                      | ^9.39.4   |
 | TypeScript types | @types/react, @types/react-dom | ^19.x  |
+| E2E Testing      | Playwright                  | ^1.58.2   |
 
 ### Storage
 
@@ -105,13 +141,16 @@ Flat-file JSON persistence — `backend/data/tasks.json` (array of task objects)
 
 ### File Responsibilities
 
-| File              | Responsibility |
-|-------------------|----------------|
-| `server.js`       | Mount middleware, mount routers, start server. No business logic. |
-| `routes/tasks.js` | Map HTTP verbs + paths → controller methods. No logic. |
+| File                       | Responsibility |
+|----------------------------|----------------|
+| `server.js`                | Mount middleware, mount routers, start server. No business logic. |
+| `routes/tasks.js`          | Map HTTP verbs + paths → controller methods. Carries Swagger JSDoc annotations. No logic. |
 | `controllers/tasksController.js` | Validate input, call data helpers, return response. |
 | `middleware/errorHandler.js` | Catch all unhandled errors, format error response envelope. |
-| `data/`           | `fs/promises` read/write helpers only. No Express objects. |
+| `data/taskStore.js`        | `fs/promises` read/write helpers only. No Express objects. |
+| `validators/taskValidator.js` | joi schemas (`createTaskSchema`, `updateTaskSchema`, `idParamSchema`, `queryFilterSchema`) + `validate` middleware factory. |
+| `config/logger.js`         | Winston logger instance exported for use across the backend. |
+| `config/swagger.js`        | swagger-jsdoc spec; defines all shared `$ref` schemas. |
 
 ### Validation
 

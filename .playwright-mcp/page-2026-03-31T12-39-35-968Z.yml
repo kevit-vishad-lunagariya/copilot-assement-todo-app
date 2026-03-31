@@ -1,0 +1,109 @@
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e7]
+      - generic [ref=e9]:
+        - heading "TaskFlow" [level=6] [ref=e10]
+        - generic [ref=e11]: Manage your tasks with ease
+  - generic [ref=e12]:
+    - generic [ref=e13]:
+      - generic [ref=e14]:
+        - heading "Tasks" [level=1] [ref=e15]
+        - paragraph [ref=e16]: 2 tasks
+      - button "Add new task" [ref=e17] [cursor=pointer]:
+        - img [ref=e19]
+        - text: Add Task
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - heading "2" [level=4] [ref=e23]
+        - generic [ref=e24]: Total
+      - generic [ref=e25]:
+        - heading "0" [level=4] [ref=e26]
+        - generic [ref=e27]: To Do
+      - generic [ref=e28]:
+        - heading "0" [level=4] [ref=e29]
+        - generic [ref=e30]: In Progress
+      - generic [ref=e31]:
+        - heading "2" [level=4] [ref=e32]
+        - generic [ref=e33]: Done
+    - generic [ref=e34]:
+      - generic [ref=e36]:
+        - img [ref=e38]
+        - textbox "Search tasks by title" [ref=e40]:
+          - /placeholder: Search tasks by title…
+        - group
+      - generic [ref=e41]:
+        - generic: Status
+        - generic [ref=e42]:
+          - combobox "Status" [ref=e43] [cursor=pointer]
+          - textbox
+          - img
+          - group:
+            - generic: Status
+      - generic [ref=e44]:
+        - generic: Priority
+        - generic [ref=e45]:
+          - combobox "Priority" [ref=e46] [cursor=pointer]
+          - textbox
+          - img
+          - group:
+            - generic: Priority
+    - table "Tasks table" [ref=e48]:
+      - rowgroup [ref=e49]:
+        - row "Title Priority Status Created Date Actions" [ref=e50]:
+          - columnheader "Title" [ref=e51]:
+            - button "Title" [ref=e52] [cursor=pointer]:
+              - text: Title
+              - img [ref=e53]
+          - columnheader "Priority" [ref=e55]:
+            - button "Priority" [ref=e56] [cursor=pointer]:
+              - text: Priority
+              - img [ref=e57]
+          - columnheader "Status" [ref=e59]:
+            - button "Status" [ref=e60] [cursor=pointer]:
+              - text: Status
+              - img [ref=e61]
+          - columnheader "Created Date" [ref=e63]:
+            - button "Created Date" [ref=e64] [cursor=pointer]:
+              - text: Created Date
+              - img [ref=e65]
+          - columnheader "Actions" [ref=e67]
+      - rowgroup [ref=e68]:
+        - row "test task Medium Done 31 Mar 2026 Already completed Edit Delete" [ref=e69]:
+          - cell "test task" [ref=e70]:
+            - paragraph [ref=e71]: test task
+          - cell "Medium" [ref=e72]:
+            - generic [ref=e74]: Medium
+          - cell "Done" [ref=e75]:
+            - generic [ref=e77]: Done
+          - cell "31 Mar 2026" [ref=e78]
+          - cell "Already completed Edit Delete" [ref=e79]:
+            - generic [ref=e80]:
+              - generic "Already completed" [ref=e81]:
+                - button "test task is done" [disabled]:
+                  - img
+              - generic "Edit" [ref=e82]:
+                - button "Edit test task" [ref=e83] [cursor=pointer]:
+                  - img [ref=e84]
+              - generic "Delete" [ref=e86]:
+                - button "Delete test task" [ref=e87] [cursor=pointer]:
+                  - img [ref=e88]
+        - row "asdasdas High Done 31 Mar 2026 Already completed Edit Delete" [ref=e90]:
+          - cell "asdasdas" [ref=e91]:
+            - paragraph [ref=e92]: asdasasd
+          - cell "High" [ref=e93]:
+            - generic [ref=e95]: High
+          - cell "Done" [ref=e96]:
+            - generic [ref=e98]: Done
+          - cell "31 Mar 2026" [ref=e99]
+          - cell "Already completed Edit Delete" [ref=e100]:
+            - generic [ref=e101]:
+              - generic "Already completed" [ref=e102]:
+                - button "asdasasd is done" [disabled]:
+                  - img
+              - generic "Edit" [ref=e103]:
+                - button "Edit asdasasd" [ref=e104] [cursor=pointer]:
+                  - img [ref=e105]
+              - generic "Delete" [ref=e107]:
+                - button "Delete asdasasd" [ref=e108] [cursor=pointer]:
+                  - img [ref=e109]
